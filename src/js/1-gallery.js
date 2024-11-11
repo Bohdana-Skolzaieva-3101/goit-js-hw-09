@@ -98,5 +98,6 @@ renderedGallery();
 
 const lightbox = new SimpleLightbox('.gallery', {
   captionsData: 'alt',
+  captionPosition: 'bottom',
   captionDelay: '250',
 });
