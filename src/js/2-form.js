@@ -1,43 +1,42 @@
-'use strict';
+const STORAGE_KEY = 'feedback-form-state';
 
-const FEEDBACK_DATA_KEY = 'feedback-form-state';
-const form = document.querySelector('form');
+const form = document.querySelector('.feedback-form');
+const emailInput = form.elements.email;
+const messageInput = form.elements.message;
 
-let getData = JSON.parse(localStorage.getItem(FEEDBACK_DATA_KEY));
+popText();
 
-if (getData) {
-  form.elements.email.value = getData.email;
-  form.elements.message.value = getData.message;
-}
+form.addEventListener('submit', event => {
+    event.preventDefault();
 
-const eventInput = () => {
-  const inputData = {
-    email: form.elements.email.value.trim(),
-    message: form.elements.message.value.trim(),
-  };
-  localStorage.setItem(FEEDBACK_DATA_KEY, JSON.stringify(inputData));
-};
-
-const eventSubmit = event => {
-  event.preventDefault();
-
-  const emailValue = form.elements.email.value.trim();
-  const messageValue = form.elements.message.value.trim();
-
-  if (!emailValue || !messageValue) {
-    alert('Заповніть всі поля форми!');
-    return;
-  } else {
-    const data = {
-      email: emailValue,
-      message: messageValue,
+    const formValues = {
+        email: emailInput.value.trim(),
+        message: messageInput.value.trim(),
     };
-    console.log(data);
-  }
 
-  localStorage.removeItem(FEEDBACK_DATA_KEY);
-  form.reset();
+    if (formValues.email === '' || formValues.message === '') {
+return alert('Please fill in all the fields!');
+    }
+    
+    console.log(formValues);
+
+    event.currentTarget.reset();
+localStorage.removeItem(STORAGE_KEY);
+});
+
+form.addEventListener('input', event => {
+const formValues = {
+email: emailInput.value.trim(),
+message: messageInput.value.trim(),
 };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formValues));
+});
 
-form.addEventListener('input', eventInput);
-form.addEventListener('submit', eventSubmit);
+function popText() {
+    const savedMessage = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    
+    if (savedMessage) {
+emailInput.value = savedMessage.email || '';
+messageInput.value = savedMessage.message || '';
+}
+}

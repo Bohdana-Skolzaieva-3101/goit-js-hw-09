@@ -1,9 +1,7 @@
-'use strict';
 
-// Описаний в документації
 import SimpleLightbox from 'simplelightbox';
-// Додатковий імпорт стилів
 import 'simplelightbox/dist/simple-lightbox.min.css';
+
 
 const images = [
   {
@@ -51,8 +49,7 @@ const images = [
   {
     preview:
       'https://cdn.pixabay.com/photo/2019/05/17/09/27/the-alps-4209272__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2019/05/17/09/27/the-alps-4209272_1280.jpg',
+    original: 'https://cdn.pixabay.com/photo/2019/05/17/09/27/the-alps-4209272_1280.jpg',
     description: 'Alpine Spring Meadows',
   },
   {
@@ -71,33 +68,30 @@ const images = [
   },
 ];
 
-const container = document.querySelector('.gallery');
+const galleryList = document.querySelector('.gallery');
 
-const renderedGallery = () => {
-  const renderedImage = images.reduce(
-    (html, img) =>
-      html +
-      `
-    <li class="gallery-item">
-  <a class="gallery-link" href="${img.original}">
-    <img
-      class="gallery-image"
-      src="${img.preview}"
-      data-source="${img.original}"
-      alt="${img.description}"
-    />
-  </a>
-</li>
-`,
-    ''
-  );
-  container.innerHTML = renderedImage;
-};
+function createGalleryItemsMarkup(images) {
+  return images
+    .map(({ preview, original, description }) => {
+      return `
+            <li class="gallery-item">
+                <a class="gallery-link" href="${original}">
+                    <img
+                        class="gallery-image"
+                        src="${preview}"
+                        alt="${description}"
+                    />
+                </a>
+            </li>
+        `;
+    })
+    .join('');
+}
 
-renderedGallery();
+const galleryMarkup = createGalleryItemsMarkup(images);
+galleryList.innerHTML = galleryMarkup;
 
-const lightbox = new SimpleLightbox('.gallery', {
+const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
-  captionPosition: 'bottom',
-  captionDelay: '250',
+  captionDelay: 250,
 });
